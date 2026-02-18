@@ -8,92 +8,93 @@
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
     height:100vh;
     overflow:hidden;
     font-family:'Amiri', serif;
-    background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1f 40%, #090916 100%);
-    color:white;
+    background: radial-gradient(circle at center, #1b1b35 0%, #111125 50%, #090916 100%);
     display:flex;
     justify-content:center;
     align-items:center;
     flex-direction:column;
+    color:white;
 }
 
-/* ضباب كوني */
-body::before{
-    content:"";
+/* الفقاعات */
+.bubble{
     position:absolute;
-    width:200%;
-    height:200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
-    animation: fogMove 40s linear infinite;
+    bottom:-100px;
+    border-radius:50%;
+    opacity:0.15;
+    animation: rise linear infinite, glow 3s infinite;
 }
 
-@keyframes fogMove{
-    from{ transform:translate(-10%, -10%) rotate(0deg);}
-    to{ transform:translate(-10%, -10%) rotate(360deg);}
+@keyframes rise{
+    from{ transform:translateY(0); }
+    to{ transform:translateY(-120vh); }
 }
 
-/* الجملة الأولى */
+@keyframes glow{
+    0%,90%,100%{ box-shadow:0 0 0px transparent; }
+    50%{ box-shadow:0 0 20px currentColor; }
+}
+
+/* العبارة الأولى */
 .intro{
     position:absolute;
-    font-size:32px;
+    top:35%;
+    font-size:26px;
     opacity:0;
-    transform:translateY(20px);
+    text-shadow:0 0 15px rgba(255,255,255,0.5);
     transition:2s ease;
 }
-
 .intro.show{
     opacity:1;
-    transform:translateY(0);
+    transform:translateY(-10px);
 }
 
 /* التاريخ */
 .date{
     position:absolute;
-    font-size:70px;
-    letter-spacing:10px;
+    font-size:48px;
+    letter-spacing:6px;
     opacity:0;
     transition:1.5s ease;
 }
+.date.show{ opacity:1; }
 
-.date.show{
-    opacity:1;
+.year-blue{ color:#6fa8ff; }
+.year-gold{ color:#ffd86b; text-shadow:0 0 15px gold; }
+
+.crack{
+    animation: crackEffect 1s ease forwards;
 }
 
-.flash{
-    animation: flashEffect 0.6s ease;
+@keyframes crackEffect{
+    0%{ letter-spacing:6px; }
+    50%{ letter-spacing:12px; text-shadow:0 0 25px gold; }
+    100%{ opacity:0; }
 }
 
-@keyframes flashEffect{
-    0%{ text-shadow:0 0 10px gold; transform:scale(1);}
-    50%{ text-shadow:0 0 40px gold,0 0 80px gold; transform:scale(1.1);}
-    100%{ transform:scale(1);}
-}
-
-/* العبارة الكبيرة */
+/* العبارة الأخيرة */
 .birth{
     position:absolute;
-    width:80%;
+    bottom:12%;
+    width:75%;
     text-align:center;
-    font-size:30px;
+    font-size:24px;
     line-height:1.8;
     opacity:0;
-    bottom:15%;
-    text-shadow:0 0 15px rgba(255,182,193,0.6),
-                0 0 30px rgba(255,215,0,0.4);
+    filter:blur(8px);
+    text-shadow:0 0 20px rgba(255,182,193,0.4),
+                0 0 40px rgba(255,215,0,0.3);
     transition:3s ease;
 }
-
 .birth.show{
     opacity:1;
+    filter:blur(0);
 }
 </style>
 </head>
@@ -101,41 +102,57 @@ body::before{
 <body>
 
 <div class="intro" id="intro">في مثل هذا اليوم…</div>
-<div class="date" id="date">20 — 02 — 2005</div>
+
+<div class="date" id="date">
+20 — 02 — <span id="year" class="year-blue">2005</span>
+</div>
+
 <div class="birth" id="birth">
 وُلِدَتْ سَيِّدَتِي، أُنْسَةُ عُمْرِي،<br>
 مَلِكَتِي وَأَمِيرَةُ قَلْبِي،<br>
 مَالِكَتِي وَكُلُّ مُمتَلَكَاتِي،<br>
-وَأَجْمَلُ رُوشَتِي ✨
+وَأَجْمَلُ رُوشَتِي
 </div>
 
 <script>
 
-const intro = document.getElementById("intro");
-const date = document.getElementById("date");
-const birth = document.getElementById("birth");
+/* إنشاء فقاعات */
+for(let i=0;i<25;i++){
+    let bubble=document.createElement("div");
+    bubble.className="bubble";
+    let size=Math.random()*30+10;
+    bubble.style.width=size+"px";
+    bubble.style.height=size+"px";
+    bubble.style.left=Math.random()*100+"vw";
+    bubble.style.color=`hsl(${Math.random()*360},70%,70%)`;
+    bubble.style.animationDuration=(Math.random()*20+15)+"s,3s";
+    document.body.appendChild(bubble);
+}
 
-/* تسلسل المشهد */
+const intro=document.getElementById("intro");
+const date=document.getElementById("date");
+const year=document.getElementById("year");
+const birth=document.getElementById("birth");
+
+/* تسلسل */
+
+setTimeout(()=> intro.classList.add("show"),1000);
+
+setTimeout(()=> intro.classList.remove("show"),4500);
+
+setTimeout(()=> date.classList.add("show"),5500);
 
 setTimeout(()=>{
-    intro.classList.add("show");
-},1000);
-
-setTimeout(()=>{
-    intro.classList.remove("show");
-},4500);
-
-setTimeout(()=>{
-    date.classList.add("show");
-},5500);
-
-setTimeout(()=>{
-    date.classList.add("flash");
+    year.classList.add("crack");
 },8000);
 
 setTimeout(()=>{
-    date.innerHTML="20 — 02 — 2026";
-},8300);
+    year.textContent="2026";
+    year.classList.remove("year-blue");
+    year.classList.add("year-gold");
+    year.classList.remove("crack");
+    year.style.opacity="1";
+},9000);
 
 setTimeout(()=>{
     birth.classList.add("show");
