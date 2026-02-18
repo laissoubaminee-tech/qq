@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Phase 1</title>
+<title>قبل أن أعرفك</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 
@@ -14,84 +14,101 @@ body{
     height:100vh;
     overflow:hidden;
     font-family:'Amiri', serif;
-    background: radial-gradient(circle at center, #1b1b35 0%, #111125 50%, #090916 100%);
+    background: radial-gradient(circle at center, #1a1a30 0%, #0e0e1a 60%, #080812 100%);
+    color:white;
     display:flex;
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    color:white;
 }
 
-/* الفقاعات */
-.bubble{
+/* خلفية نجوم خفيفة */
+body::before{
+    content:"";
     position:absolute;
-    bottom:-100px;
-    border-radius:50%;
-    opacity:0.15;
-    animation: rise linear infinite, glow 3s infinite;
+    width:200%;
+    height:200%;
+    background:
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(white 1px, transparent 1px);
+    background-size: 80px 80px;
+    background-position: 0 0, 40px 40px;
+    opacity:0.05;
+    animation: drift 120s linear infinite;
 }
 
-@keyframes rise{
-    from{ transform:translateY(0); }
-    to{ transform:translateY(-120vh); }
+@keyframes drift{
+    from{transform:translate(0,0);}
+    to{transform:translate(-200px,-200px);}
 }
 
-@keyframes glow{
-    0%,90%,100%{ box-shadow:0 0 0px transparent; }
-    50%{ box-shadow:0 0 20px currentColor; }
-}
-
-/* العبارة الأولى */
-.intro{
+/* النصوص */
+.text{
     position:absolute;
-    top:35%;
-    font-size:26px;
+    bottom:15%;
+    font-size:22px;
     opacity:0;
-    text-shadow:0 0 15px rgba(255,255,255,0.5);
     transition:2s ease;
+    text-align:center;
 }
-.intro.show{
+
+.text.show{ opacity:1; }
+
+/* نقطة الضوء */
+.light{
+    position:absolute;
+    width:6px;
+    height:6px;
+    background:white;
+    border-radius:50%;
+    box-shadow:0 0 15px white, 0 0 40px white;
+    opacity:0;
+    transition:3s ease;
+}
+
+.light.grow{
     opacity:1;
-    transform:translateY(-10px);
+    transform:scale(25);
 }
 
 /* التاريخ */
 .date{
     position:absolute;
-    font-size:48px;
+    font-size:44px;
     letter-spacing:6px;
     opacity:0;
-    transition:1.5s ease;
+    transition:2s ease;
 }
+
 .date.show{ opacity:1; }
 
 .year-blue{ color:#6fa8ff; }
 .year-gold{ color:#ffd86b; text-shadow:0 0 15px gold; }
 
-.crack{
-    animation: crackEffect 1s ease forwards;
+.time-strike{
+    animation: strike 1.5s ease forwards;
 }
 
-@keyframes crackEffect{
-    0%{ letter-spacing:6px; }
-    50%{ letter-spacing:12px; text-shadow:0 0 25px gold; }
-    100%{ opacity:0; }
+@keyframes strike{
+    0%{letter-spacing:6px;}
+    50%{letter-spacing:12px; text-shadow:0 0 25px gold;}
+    100%{opacity:0;}
 }
 
-/* العبارة الأخيرة */
+/* العبارة الملكية */
 .birth{
     position:absolute;
-    bottom:12%;
     width:75%;
     text-align:center;
     font-size:24px;
-    line-height:1.8;
+    line-height:1.9;
     opacity:0;
-    filter:blur(8px);
-    text-shadow:0 0 20px rgba(255,182,193,0.4),
+    filter:blur(10px);
+    text-shadow:0 0 25px rgba(255,182,193,0.4),
                 0 0 40px rgba(255,215,0,0.3);
-    transition:3s ease;
+    transition:4s ease;
 }
+
 .birth.show{
     opacity:1;
     filter:blur(0);
@@ -101,7 +118,10 @@ body{
 
 <body>
 
-<div class="intro" id="intro">في مثل هذا اليوم…</div>
+<div class="text" id="t1">كان العالم… عاديًا.</div>
+<div class="text" id="t2">والأيام تمر… بلا معنى.</div>
+
+<div class="light" id="light"></div>
 
 <div class="date" id="date">
 20 — 02 — <span id="year" class="year-blue">2005</span>
@@ -116,47 +136,43 @@ body{
 
 <script>
 
-/* إنشاء فقاعات */
-for(let i=0;i<25;i++){
-    let bubble=document.createElement("div");
-    bubble.className="bubble";
-    let size=Math.random()*30+10;
-    bubble.style.width=size+"px";
-    bubble.style.height=size+"px";
-    bubble.style.left=Math.random()*100+"vw";
-    bubble.style.color=`hsl(${Math.random()*360},70%,70%)`;
-    bubble.style.animationDuration=(Math.random()*20+15)+"s,3s";
-    document.body.appendChild(bubble);
-}
-
-const intro=document.getElementById("intro");
+const t1=document.getElementById("t1");
+const t2=document.getElementById("t2");
+const light=document.getElementById("light");
 const date=document.getElementById("date");
 const year=document.getElementById("year");
 const birth=document.getElementById("birth");
 
-/* تسلسل */
+/* تسلسل سينمائي */
 
-setTimeout(()=> intro.classList.add("show"),1000);
+setTimeout(()=> t1.classList.add("show"),3000);
+setTimeout(()=> t1.classList.remove("show"),6000);
 
-setTimeout(()=> intro.classList.remove("show"),4500);
+setTimeout(()=> t2.classList.add("show"),7500);
+setTimeout(()=> t2.classList.remove("show"),10500);
 
-setTimeout(()=> date.classList.add("show"),5500);
+setTimeout(()=> light.classList.add("grow"),11500);
 
 setTimeout(()=>{
-    year.classList.add("crack");
-},8000);
+    light.style.opacity="0";
+    date.classList.add("show");
+},14500);
+
+setTimeout(()=>{
+    year.classList.add("time-strike");
+},17500);
 
 setTimeout(()=>{
     year.textContent="2026";
     year.classList.remove("year-blue");
     year.classList.add("year-gold");
-    year.classList.remove("crack");
+    year.classList.remove("time-strike");
     year.style.opacity="1";
-},9000);
+},19000);
 
 setTimeout(()=>{
     birth.classList.add("show");
-},11000);
+},21500);
 
 </script>
 
