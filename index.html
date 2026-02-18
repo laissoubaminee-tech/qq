@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    font-family:'Amiri', serif;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0f0f1f 40%, #090916 100%);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+/* ضباب كوني */
+body::before{
+    content:"";
+    position:absolute;
+    width:200%;
+    height:200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+    animation: fogMove 40s linear infinite;
+}
+
+@keyframes fogMove{
+    from{ transform:translate(-10%, -10%) rotate(0deg);}
+    to{ transform:translate(-10%, -10%) rotate(360deg);}
+}
+
+/* الجملة الأولى */
+.intro{
+    position:absolute;
+    font-size:32px;
+    opacity:0;
+    transform:translateY(20px);
+    transition:2s ease;
+}
+
+.intro.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* التاريخ */
+.date{
+    position:absolute;
+    font-size:70px;
+    letter-spacing:10px;
+    opacity:0;
+    transition:1.5s ease;
+}
+
+.date.show{
+    opacity:1;
+}
+
+.flash{
+    animation: flashEffect 0.6s ease;
+}
+
+@keyframes flashEffect{
+    0%{ text-shadow:0 0 10px gold; transform:scale(1);}
+    50%{ text-shadow:0 0 40px gold,0 0 80px gold; transform:scale(1.1);}
+    100%{ transform:scale(1);}
+}
+
+/* العبارة الكبيرة */
+.birth{
+    position:absolute;
+    width:80%;
+    text-align:center;
+    font-size:30px;
+    line-height:1.8;
+    opacity:0;
+    bottom:15%;
+    text-shadow:0 0 15px rgba(255,182,193,0.6),
+                0 0 30px rgba(255,215,0,0.4);
+    transition:3s ease;
+}
+
+.birth.show{
+    opacity:1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="intro" id="intro">في مثل هذا اليوم…</div>
+<div class="date" id="date">20 — 02 — 2005</div>
+<div class="birth" id="birth">
+وُلِدَتْ سَيِّدَتِي، أُنْسَةُ عُمْرِي،<br>
+مَلِكَتِي وَأَمِيرَةُ قَلْبِي،<br>
+مَالِكَتِي وَكُلُّ مُمتَلَكَاتِي،<br>
+وَأَجْمَلُ رُوشَتِي ✨
+</div>
+
+<script>
+
+const intro = document.getElementById("intro");
+const date = document.getElementById("date");
+const birth = document.getElementById("birth");
+
+/* تسلسل المشهد */
+
+setTimeout(()=>{
+    intro.classList.add("show");
+},1000);
+
+setTimeout(()=>{
+    intro.classList.remove("show");
+},4500);
+
+setTimeout(()=>{
+    date.classList.add("show");
+},5500);
+
+setTimeout(()=>{
+    date.classList.add("flash");
+},8000);
+
+setTimeout(()=>{
+    date.innerHTML="20 — 02 — 2026";
+},8300);
+
+setTimeout(()=>{
+    birth.classList.add("show");
+},11000);
+
+</script>
+
+</body>
+</html>
