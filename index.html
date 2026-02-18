@@ -22,80 +22,53 @@ body{
     flex-direction:column;
 }
 
-/* خلفية نجوم خفيفة */
-body::before{
-    content:"";
+/* فقاعات احتفالية */
+.bubble{
     position:absolute;
-    width:200%;
-    height:200%;
-    background:
-        radial-gradient(white 1px, transparent 1px),
-        radial-gradient(white 1px, transparent 1px);
-    background-size: 80px 80px;
-    background-position: 0 0, 40px 40px;
-    opacity:0.05;
-    animation: drift 120s linear infinite;
+    bottom:-100px;
+    border-radius:50%;
+    opacity:0.2;
+    animation: rise linear infinite;
 }
 
-@keyframes drift{
-    from{transform:translate(0,0);}
-    to{transform:translate(-200px,-200px);}
+@keyframes rise{
+    from{ transform:translateY(0); }
+    to{ transform:translateY(-120vh); }
 }
 
 /* النصوص */
 .text{
     position:absolute;
-    bottom:15%;
+    bottom:18%;
     font-size:22px;
     opacity:0;
     transition:2s ease;
-    text-align:center;
 }
 
 .text.show{ opacity:1; }
 
-/* نقطة الضوء */
-.light{
-    position:absolute;
-    width:6px;
-    height:6px;
-    background:white;
-    border-radius:50%;
-    box-shadow:0 0 15px white, 0 0 40px white;
-    opacity:0;
-    transition:3s ease;
-}
-
-.light.grow{
-    opacity:1;
-    transform:scale(25);
-}
-
 /* التاريخ */
 .date{
     position:absolute;
-    font-size:44px;
+    font-size:42px;
     letter-spacing:6px;
     opacity:0;
-    transition:2s ease;
+    transition:1.5s ease;
 }
 
 .date.show{ opacity:1; }
 
-.year-blue{ color:#6fa8ff; }
-.year-gold{ color:#ffd86b; text-shadow:0 0 15px gold; }
-
-.time-strike{
-    animation: strike 1.5s ease forwards;
+.year{
+    color:#6fa8ff;
+    transition:0.3s;
 }
 
-@keyframes strike{
-    0%{letter-spacing:6px;}
-    50%{letter-spacing:12px; text-shadow:0 0 25px gold;}
-    100%{opacity:0;}
+.year.final{
+    color:#ffd86b;
+    text-shadow:0 0 15px gold;
 }
 
-/* العبارة الملكية */
+/* العبارة الأخيرة */
 .birth{
     position:absolute;
     width:75%;
@@ -103,10 +76,10 @@ body::before{
     font-size:24px;
     line-height:1.9;
     opacity:0;
-    filter:blur(10px);
+    filter:blur(8px);
     text-shadow:0 0 25px rgba(255,182,193,0.4),
                 0 0 40px rgba(255,215,0,0.3);
-    transition:4s ease;
+    transition:3s ease;
 }
 
 .birth.show{
@@ -118,13 +91,10 @@ body::before{
 
 <body>
 
-<div class="text" id="t1">كان العالم… عاديًا.</div>
-<div class="text" id="t2">والأيام تمر… بلا معنى.</div>
-
-<div class="light" id="light"></div>
+<div class="text" id="intro">في هذا اليوم…</div>
 
 <div class="date" id="date">
-20 — 02 — <span id="year" class="year-blue">2005</span>
+20 — 02 — <span id="year" class="year">2005</span>
 </div>
 
 <div class="birth" id="birth">
@@ -136,43 +106,55 @@ body::before{
 
 <script>
 
-const t1=document.getElementById("t1");
-const t2=document.getElementById("t2");
-const light=document.getElementById("light");
+/* إنشاء فقاعات */
+for(let i=0;i<30;i++){
+    let bubble=document.createElement("div");
+    bubble.className="bubble";
+    let size=Math.random()*25+10;
+    bubble.style.width=size+"px";
+    bubble.style.height=size+"px";
+    bubble.style.left=Math.random()*100+"vw";
+    bubble.style.background=`hsl(${Math.random()*360},70%,70%)`;
+    bubble.style.animationDuration=(Math.random()*15+15)+"s";
+    document.body.appendChild(bubble);
+}
+
+const intro=document.getElementById("intro");
 const date=document.getElementById("date");
 const year=document.getElementById("year");
 const birth=document.getElementById("birth");
 
-/* تسلسل سينمائي */
+/* نبضة صوت */
+const heartbeat = new Audio("https://www.soundjay.com/human/heartbeat-01a.mp3");
 
-setTimeout(()=> t1.classList.add("show"),3000);
-setTimeout(()=> t1.classList.remove("show"),6000);
+/* تسلسل */
 
-setTimeout(()=> t2.classList.add("show"),7500);
-setTimeout(()=> t2.classList.remove("show"),10500);
+setTimeout(()=> intro.classList.add("show"),2000);
+setTimeout(()=> date.classList.add("show"),3500);
 
-setTimeout(()=> light.classList.add("grow"),11500);
-
+/* عدّاد الزمن */
 setTimeout(()=>{
-    light.style.opacity="0";
-    date.classList.add("show");
-},14500);
+    let current=2005;
+    let interval=setInterval(()=>{
+        current++;
+        year.textContent=current;
+        if(current>=2026){
+            clearInterval(interval);
+            year.classList.add("final");
+            heartbeat.play();
 
-setTimeout(()=>{
-    year.classList.add("time-strike");
-},17500);
+            /* اختفاء التاريخ بعد ثانيتين */
+            setTimeout(()=>{
+                date.style.opacity="0";
+            },2000);
 
-setTimeout(()=>{
-    year.textContent="2026";
-    year.classList.remove("year-blue");
-    year.classList.add("year-gold");
-    year.classList.remove("time-strike");
-    year.style.opacity="1";
-},19000);
-
-setTimeout(()=>{
-    birth.classList.add("show");
-},21500);
+            /* ظهور العبارة بعد الاختفاء */
+            setTimeout(()=>{
+                birth.classList.add("show");
+            },4000);
+        }
+    },80);
+},6000);
 
 </script>
 
